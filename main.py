@@ -1,14 +1,6 @@
-from flask import Flask
+import maps
 
-
-app = Flask(__name__)
-
-
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello Social Map Korea!'
-
+app = maps.create_app()
 
 if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the

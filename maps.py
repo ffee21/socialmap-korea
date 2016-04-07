@@ -9,15 +9,7 @@ def create_app(debug=False, testing=False):
     @app.route("/")
     def index():
         return render_template("mainmap.html")
-    
-    @app.route("/onload.js")
-    def onload_js():
-        return render_template("onload.js")
-    
-    @app.route("/map.json")
-    def map_json():
-        return render_template("map.json")
-    
+        
     @app.route("/data_def.csv")
     def data_def_csv():
         return render_template("data_def.csv")

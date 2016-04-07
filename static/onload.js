@@ -107,7 +107,7 @@ d3.csv("data.csv", function(error, data) {
 	}
 });
 
-d3.json("map.json", function(error, data) {
+d3.json("/static/map.json", function(error, data) {
 	if (error) {
 		return console.error(error);
 	} else{

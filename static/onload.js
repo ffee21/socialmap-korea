@@ -42,12 +42,12 @@ function update(what, data) {
 		consel.selectAll("option")
 				.data(datafiles)
 				.enter().append("option")
-				.attr("value", function(d) {return d.data_code;})
+				.attr("value", function(d) {return d.code;})
 				.text(function(d) {return d.name;});
 
 		s[DATA_DEF] = true;
 
-		applyInputValue(datafiles[0].data_code)
+		applyInputValue(datafiles[0].code)
 
 	} else if (what == MAP) {
 		var subunits = topojson.feature(data, data.objects.skorea_municipalities_geo);
@@ -91,7 +91,7 @@ function update(what, data) {
 	}
 }
 
-d3.csv("data_def.csv", function(error, data) {
+d3.json("data_def.json", function(error, data) {
 	if (error) {
 		return console.error(error);
 	} else{
@@ -99,7 +99,7 @@ d3.csv("data_def.csv", function(error, data) {
 	}	
 });
 
-d3.csv("data.csv", function(error, data) {
+d3.json("data.json", function(error, data) {
 	if (error) {
 		return console.error(error);
 	} else{

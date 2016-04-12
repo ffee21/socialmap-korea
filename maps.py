@@ -12,6 +12,9 @@ def create_app(debug=False, testing=False):
     def index():
         return render_template("mainmap.html")
 
+    @app.route("/dataview")
+    def dataview():
+        return render_template("dataview.html")
     @app.route("/data_def.json")
     def data_def_json():
         import json

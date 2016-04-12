@@ -76,11 +76,17 @@ function update(what, data) {
 			
 			max = d3.max(showdata, function(d) {return d.value;});
 			min = d3.min(showdata, function(d) {return d.value;});
+			vis.selectAll("path")
+				.style("fill", d3.rgb(255, 0, 0))
+				.style("stroke", "#303030");
 			
 			showdata.forEach(function(sd) {
-				var v = 256 * (sd.value - min)/(max-min);
+				var v = Math.floor(200 * (sd.value - min)/(max-min) + 56);
+				console.log(sd.name + ", " + sd.value);
 				vis.select("#adm_" + sd.adm_code)
-					.style("fill", d3.rgb(v,v,v));
+					.style("fill", d3.rgb(v,v,0))
+					.attr("text", sd.value)
+					.style("stroke", "#303030");
 			});
 			
 			s[SHOW_DATA] = true;

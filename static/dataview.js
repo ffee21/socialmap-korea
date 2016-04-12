@@ -40,47 +40,13 @@ d3.json("/data.json", function(error, datadata) {
 					trs.append("td").attr("id", function (d) { return "cell_" + d + "_" + datajson_data_code_list[item]; }).style("background", "red");
 				}
 				
-				
 				for (item in datadata) {
 					var theitem = datadata[item];
 					var cell = d3.select("#cell_" + theitem.adm_code + "_" + theitem.data_code);
 					cell.text(theitem.value);
 					cell.style("background", "blue");
 				}
-				
-//				
-//				var adm_region_dict = data
-//				var adm_region_key_list = [];
-//				var adm_region_list = [];
-//				
-//				for (aKey in adm_region_dict) {
-//					adm_region_key_list.push(aKey);
-//				}
-//				
-//				var adm_code_list = unique(adm_region_key_list.concat(datajson_adm_code_list)).sort();
-//				
-//				
-//				
-////				adm_region_key_list = adm_region_key_list.sort();
-////				for (aKey in adm_region_key_list) {
-////					adm_region_list.push(adm_region_dict[adm_region_key_list[aKey]]);
-////				}
-//					
-//				var table = d3.select("#datatable").append("table").attr("id", "datatablet");
-//				var trs = table.selectAll("tr")
-//						.data(adm_code_list)
-//						.enter().append("tr");
-//				trs.attr("id", function (d) {return d;});
-//				trs.append("td").text(function (d) {return d;});
-//				trs.append("td").text(function (d) {if (adm_region_dict[d]) return adm_region_dict[d].name;});
-//				trs.append("td").text(function (d) {if (adm_region_dict[d]) if (adm_region_dict[d].isobsolete) { return "폐지"; } });
-//				for (item in datajson_data_code_list) {
-//					trs.append("td").attr("id", function (d) { return "cell_" + d + "_" + datajson_data_code_list[item]; });
-//				}
 			}
 		});
-//		d3.json("/static/sido_sigungu_db_20160201.json", function(error, data) {
-//				
-//		});
 	}
 });

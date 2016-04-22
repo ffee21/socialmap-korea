@@ -1,0 +1,25 @@
+{# [START regionconvert] #}
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+td {
+	border: none;
+}
+
+#regiontable td {
+	border: 1px solid black; 
+}
+</style>
+
+<div id="formcont"></div>
+
+<p>* 시도(space)시군구명(tab)값(tab)... 형식으로 입력</p>
+
+<div id="regiontable"></div>
+ 
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="https://d3js.org/d3.v3.js"></script>
+<script src="/static/regionconvert.js"></script>
+{% endblock %}
+{# [END regionconvert] #}

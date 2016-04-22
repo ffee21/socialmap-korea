@@ -24,8 +24,9 @@ def fetchDataDefs():
     wks = gc.open("socialmapkorea_data").sheet1
     
     code_list = list(filter(lambda x: len(x)>0, wks.col_values(1)))
-    name_list = list(filter(lambda x: len(x)>0, wks.col_values(2)))
-    data_def_list = list(map(lambda x,y: [x,y], code_list, name_list))
+    baseyear_list = list(filter(lambda x: len(x)>0, wks.col_values(2)))
+    name_list = list(filter(lambda x: len(x)>0, wks.col_values(3)))
+    data_def_list = list(map(lambda x,y,z: [x,y,z], code_list, baseyear_list, name_list))
 
     return data_def_list
 
@@ -44,11 +45,12 @@ def importDataDefs():
                 datadefEntity = datastore.Entity(key=incomplete_keys)
                 datadefEntity.update({
                                       'code': item[0],
-                                      'name': item[1]})
+                                      'baseyear': item[1],
+                                      'name': item[2]})
                 client.put(datadefEntity)
 
 def getAllDataDefs():
     client = datastore.Client(os.environ['GCLOUD_PROJECT'])
     all = selectAll(client, kind='Data_Def', order='code')
-    allc = list(map(lambda x: {'code': x[u'code'].encode("utf-8"), 'name': x[u'name'].encode("utf-8")}, all))
+    allc = list(map(lambda x: {'code': x[u'code'].encode("utf-8"), 'baseyear': x[u'baseyear'].encode("utf-8"), 'name': x[u'name'].encode("utf-8")}, all))
     return allc

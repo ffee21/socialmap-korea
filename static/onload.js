@@ -54,40 +54,87 @@ function update(what, data) {
 		var features = subunits.features;
 		
 	    var projection = d3.geo.mercator()
-						    .center([129, 36])
-						    .scale(4000)
-						    .translate([width/2, height/2]);
+	    					.center([0, 0])
+						    .scale(1);
 
 	    var path = d3.geo.path()
 	    			.projection(projection);
 		
-		vis.selectAll("path")
-			.data(features)
-			.enter().append("path")
-				.attr("d", path)
-				.attr("id", function(d) { return "adm_" + d.properties.code; });
+		var paths = vis.selectAll("path")
+						.data(features)
+						.enter().append("path")
+							.attr("d", path)
+							.attr("id", function(d) { return "adm_" + d.properties.sigungu_cd; });
+		
+	    var bounds = path.bounds(subunits),
+	      dx = bounds[1][0] - bounds[0][0],
+	      dy = bounds[1][1] - bounds[0][1],
+	      x = (bounds[0][0] + bounds[1][0]) / 2,
+	      y = (bounds[0][1] + bounds[1][1]) / 2,
+	      scale = .9 / Math.max(dx / width, dy / height),
+	      translate = [width / 2 - scale * x, height / 2 - scale * y];
+	    
 		s[MAP] = true;
+		
+		
+		paths.transition()
+	      .duration(750)
+	      .style("stroke-width", 1.5 / scale + "px")
+	      .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+	    
+		
+		
 	} else if (what == DEFAULT_DATA) {
 		defaultdata = data;
 		s[DEFAULT_DATA] = true;
 	} else if (what == SHOW_DATA_INDEX_CHANGED) {
-		if (s[MAP] && s[DEFAULT_DATA]) {
+		if (s[MAP] && s[DEFAULT_DATA]) { 
 			showdata = defaultdata.filter(function (d) {return d.data_code == data;});
+//			console.log(showdata);
+			max = d3.max(showdata, function(d) {return parseFloat(d.value);});
+			min = d3.min(showdata, function(d) {return parseFloat(d.value);});
+			console.log("max: " + max + ", min: " + min);
 			
-			max = d3.max(showdata, function(d) {return d.value;});
-			min = d3.min(showdata, function(d) {return d.value;});
 			vis.selectAll("path")
-				.style("fill", d3.rgb(255, 0, 0))
-				.style("stroke", "#303030");
+			.style("fill", d3.rgb(255, 0, 0))
+			.style("stroke", "solid 1px #303030");
+		
+			if (min > 100) { 	// for population-like data
+				showdata.forEach(function(sd) {
+					var v = Math.floor(256 * (sd.value - min)/(max-min) + 0);
+					vis.select("#adm_" + sd.adm_code)
+						.style("fill", d3.rgb(v,v,v))
+						.attr("text", sd.value)
+						.style("stroke", "solid 1px #303030");
+				});
+			} else if (min > 0 && max < 2) {	// for sex-ratio-like data
+				showdata.forEach(function(sd) {
+					var maxdist = Math.max(1-min, max-1);
+					if (sd.value < 1) { // assume less is worse
+						var v = Math.floor(255 * (1 - sd.value)/maxdist);
+						vis.select("#adm_" + sd.adm_code)
+							.style("fill", d3.rgb(255,255-v,255-v))
+							.attr("text", sd.value)
+							.style("stroke", "solid 1px #303030");
+					} else {
+						var v = Math.floor(255 * (sd.value-1)/maxdist);
+						vis.select("#adm_" + sd.adm_code)
+							.style("fill", d3.rgb(255-v,255-v,255))
+							.attr("text", sd.value)
+							.style("stroke", "solid 1px #303030");
+					}
+				});
+			} else {
+				showdata.forEach(function(sd) {
+					var v = Math.floor(256 * (sd.value - min)/(max-min) + 0);
+					vis.select("#adm_" + sd.adm_code)
+						.style("fill", d3.rgb(v,v,v))
+						.attr("text", sd.value)
+						.style("stroke", "solid 1px #303030");
+				});
+			}
 			
-			showdata.forEach(function(sd) {
-				var v = Math.floor(200 * (sd.value - min)/(max-min) + 56);
-				console.log(sd.name + ", " + sd.value);
-				vis.select("#adm_" + sd.adm_code)
-					.style("fill", d3.rgb(v,v,0))
-					.attr("text", sd.value)
-					.style("stroke", "#303030");
-			});
+			
 			
 			s[SHOW_DATA] = true;
 		} else {
@@ -113,7 +160,7 @@ d3.json("data.json", function(error, data) {
 	}
 });
 
-d3.json("/static/map.json", function(error, data) {
+d3.json("/static/map4.json", function(error, data) {
 	if (error) {
 		return console.error(error);
 	} else{

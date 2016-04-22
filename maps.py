@@ -1,6 +1,7 @@
 from flask import current_app, Flask, render_template, redirect, url_for, request
 import datadef
 import actualdata
+import regiondef
 
 def create_app(debug=False, testing=False):
     app = Flask(__name__)
@@ -43,6 +44,29 @@ def create_app(debug=False, testing=False):
          
         return data2_json()
     
+    @app.route("/sandbox")
+    def sandbox():
+        return render_template("sandbox.html")
+    
+    @app.route("/regionconvert")
+    def regionconvert():
+        return render_template("regionconvert.html")
+    
+    @app.route("/region_def.json")
+    def region_def_json():
+        import json
+        
+        all = regiondef.selectAllRegionDefs()
+        
+        return json.dumps(all, ensure_ascii=False)
+
+    @app.route("/refresh_region_defs")
+    def refresh_region_defs():
+        regiondef.importRegionDefs()
+        
+        return region_def_json()
+    
+        
     @app.errorhandler(500)
     def server_error(e):
         return """
